@@ -7,7 +7,7 @@ let [width, height] = [window.innerWidth, window.innerHeight];
 const gr = 9.81; // Gravity
 const otherForces = -0.0009;
 
-// // Set canvas size
+//  Set canvas size
 canvas.setAttribute("width", width);
 canvas.setAttribute("height", height);
 
