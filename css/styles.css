@@ -2,10 +2,10 @@ body {
     margin: 0;
     padding: 0;
 }
-.stage {
-    background-color: #f5f5f5;
-}
 h1{
     position: fixed;
     z-index: 1;
+}
+.stage {
+    background-color: #f5f5f5;
 }
