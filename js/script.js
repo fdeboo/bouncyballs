@@ -117,7 +117,8 @@ window.addEventListener("resize", (e) => {
  * Draws the new ball to the canvas and then adds it to array of ball objects
  */
 const eventHandler = (ev) => {
-  console.log("clicked");
+  ev.preventDefault();
+  console.log(ev);
   const { x, y } = ev;
   const ball = new Ball(x, y);
   ball._draw();
