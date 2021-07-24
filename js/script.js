@@ -1,13 +1,32 @@
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 const frameRate = 1 / 40; // seconds
-const loopInterval = frameRate * 1000; // Convert to milliseconds
-const objArr = [];
+const loopInterval = frameRate * 1000; // milliseconds
+const ballsArr = [];
 let [width, height] = [window.innerWidth, window.innerHeight];
 const gr = 9.81; // Gravity
-const otherForces = -0.0009;
+const drag = -0.0009;
 
-//  Set canvas size
+/**
+ * Redraws the canvas with the calculated position of every ball in the balls array (if any)
+ *
+ * Clear the canvas
+ * Check for existing balls (return if none)
+ * Loop existing ball objects in array
+ * Calculate the new position of each ball and draw it on the canvas
+ */
+const frameLoop = () => {
+  ctx.clearRect(0, 0, width, height);
+  ctx.save();
+
+  if (ballsArr.length === 0) return;
+  ballsArr.forEach((ball) => {
+    ball._applyPhysics();
+    ball._draw();
+  });
+};
+const loop = setInterval(frameLoop, loopInterval);
+
 canvas.setAttribute("width", width);
 canvas.setAttribute("height", height);
 
@@ -23,6 +42,9 @@ class Ball {
     this.bounce = -0.7; // must be negative
   }
 
+  /**
+   * draws a circle to the canvas
+   */
   _draw() {
     ctx.beginPath();
     ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI);
@@ -31,24 +53,28 @@ class Ball {
     ctx.closePath();
   }
 
+  /**
+   * Calculates the position of the ball based on its speed in x and y directions
+   *
+   * Assumes 1px = 1cm
+   * Calculate the acceleration rate since last frame
+   * Calculate the current velocity based on its rate of acceleration m/psecond
+   * Calculate the new position from the veloctity and time passed
+   * Rebound the direction if the ball reaches the canvas boundaries
+   * Credit: (https://burakkanber.com/blog/modeling-physics-javascript-gravity-and-drag/)
+   */
   _applyPhysics() {
-    // Credit: (https://burakkanber.com/blog/modeling-physics-javascript-gravity-and-drag/)
     const acclX =
-      (otherForces *
-        this.radius ** 2 *
-        this.velocity.x *
-        Math.abs(this.velocity.x)) /
+      (drag * this.radius ** 2 * this.velocity.x * Math.abs(this.velocity.x)) /
       this.mass;
     const acclY =
       (gr +
-        otherForces *
-          this.radius ** 2 *
-          this.velocity.y *
-          Math.abs(this.velocity.y)) /
+        drag * this.radius ** 2 * this.velocity.y * Math.abs(this.velocity.y)) /
       this.mass;
 
     this.velocity.x += acclX * frameRate;
     this.velocity.y += acclY * frameRate;
+
     this.position.x += this.velocity.x * frameRate * 100;
     this.position.y += this.velocity.y * frameRate * 100;
 
@@ -74,6 +100,10 @@ class Ball {
   }
 }
 
+/**
+ * Whenever the browser window is resized, resets the values of width
+ * and height variables and updates the size of the canvas
+ */
 window.addEventListener("resize", (e) => {
   width = window.innerWidth;
   height = window.innerHeight;
@@ -81,36 +111,21 @@ window.addEventListener("resize", (e) => {
   canvas.setAttribute("height", height);
 });
 
-window.addEventListener("click", (ev) => {
-  // Get click coordinates
+/**
+ * Creates a new ball object using the coords of the click/touch screen event.
+ * Extracts the X and Y location from the event object
+ * Draws the new ball to the canvas and then adds it to array of ball objects
+ */
+const eventHandler = (ev) => {
+  console.log("clicked");
   const { x, y } = ev;
-
-  // Create new ball
   const ball = new Ball(x, y);
-
-  // Draw to canvas
   ball._draw();
-
-  // Add to array of balls
-  objArr.push(ball);
-});
-
-const frameLoop = () => {
-  // Clear the canvas
-  ctx.clearRect(0, 0, width, height);
-  ctx.save();
-
-  if (objArr.length === 0) return;
-  objArr.forEach((ball) => {
-    // Apply physics
-    ball._applyPhysics();
-
-    // Redraw the ball
-    ball._draw();
-  });
+  ballsArr.push(ball);
 };
 
-const loop = setInterval(frameLoop, loopInterval);
+canvas.addEventListener("click", (ev) => eventHandler(ev));
+canvas.addEventListener("touchstart", (ev) => eventHandler(ev));
 
 //////////////////// IGNORE THE BELOW
 
@@ -125,5 +140,5 @@ const loop = setInterval(frameLoop, loopInterval);
 // Fy = isNaN(Fy) ? 0 : Fy;
 // const acclX = Fx / this.mass;
 // const acclY = gr + Fy / this.mass;
-// this._updatePos(acclX, acclY);
+//
 // const forces = -0.0003 * Math.PI * this.radius ** 2;
