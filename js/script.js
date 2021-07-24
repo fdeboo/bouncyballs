@@ -119,6 +119,8 @@ window.addEventListener("resize", (e) => {
 const eventHandler = (ev) => {
   console.log(canvas);
   console.log(width, height);
+  const heading = document.querySelector("h1");
+  heading.setAttribute("style", "color:blue;");
   const { x, y } = ev;
   const ball = new Ball(x, y);
   ball._draw();
@@ -127,8 +129,7 @@ const eventHandler = (ev) => {
 
 canvas.addEventListener("touchstart", (ev) => {
   ev.preventDefault();
-  const heading = document.querySelector("h1");
-  heading.setAttribute("style", "color:blue;");
+
   eventHandler(ev);
 });
 canvas.addEventListener("click", (ev) => eventHandler(ev));
