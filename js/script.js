@@ -126,6 +126,8 @@ const eventHandler = (ev) => {
 
 canvas.addEventListener("touchstart", (ev) => {
   ev.preventDefault();
+  const heading = document.querySelector("h1");
+  heading.setAttribute("style", "color:blue;");
   eventHandler(ev);
 });
 canvas.addEventListener("click", (ev) => eventHandler(ev));
