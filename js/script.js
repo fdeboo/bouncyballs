@@ -117,10 +117,6 @@ window.addEventListener("resize", (e) => {
  * Draws the new ball to the canvas and then adds it to array of ball objects
  */
 const eventHandler = (ev) => {
-  console.log(canvas);
-  console.log(width, height);
-  const heading = document.querySelector("h1");
-  heading.setAttribute("style", "color:blue;");
   const { x, y } = ev;
   const ball = new Ball(x, y);
   ball._draw();
@@ -129,8 +125,10 @@ const eventHandler = (ev) => {
 
 canvas.addEventListener("touchstart", (ev) => {
   ev.preventDefault();
-
-  eventHandler(ev);
+  const { clientX, clientY } = ev.touches[0];
+  const ball = new Ball(clientX, clientY);
+  ball._draw();
+  ballsArr.push(ball);
 });
 canvas.addEventListener("click", (ev) => eventHandler(ev));
 
