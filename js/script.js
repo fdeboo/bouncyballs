@@ -126,6 +126,7 @@ canvas.addEventListener("touchstart", (ev) => {
   ev.preventDefault();
   const x = ev.touches[0].clientX;
   const y = ev.touches[0].clientY;
+  console.log(y);
   eventHandler(x, y);
 });
 canvas.addEventListener("click", (ev) => {
