@@ -34,8 +34,8 @@ class Ball {
   constructor(x, y) {
     this.position = { x: x, y: y };
     this.velocity = {
-      x: Math.floor(Math.random() * 40 - 20),
-      y: Math.floor(Math.random() * 40 - 20),
+      x: Math.floor(Math.random() * 10 - 10),
+      y: Math.floor(Math.random() * 10 - 10),
     };
     this.mass = 0.4;
     this.radius = 8;
@@ -57,21 +57,15 @@ class Ball {
    * Calculates the position of the ball based on its speed in x and y directions
    *
    * Assumes 1px = 1cm
-   * Calculate the acceleration rate since last frame
+   * Calculate the acceleration with affect of drag for X and Y
    * Calculate the current velocity based on its rate of acceleration m/psecond
    * Calculate the new position from the veloctity and time passed
-   * Rebound the direction if the ball reaches the canvas boundaries
+   * Rebound the ball if it reaches the canvas boundaries
    * Credit: (https://burakkanber.com/blog/modeling-physics-javascript-gravity-and-drag/)
    */
   _applyPhysics() {
-    const acclX =
-      (drag * this.radius ** 2 * this.velocity.x * Math.abs(this.velocity.x)) /
-      this.mass;
-    const acclY =
-      (gr +
-        drag * this.radius ** 2 * this.velocity.y * Math.abs(this.velocity.y)) /
-      this.mass;
-
+    const acclX = drag * this.velocity.x ** 2;
+    const acclY = gr + drag * this.velocity.y ** 2;
     this.velocity.x += acclX * frameRate;
     this.velocity.y += acclY * frameRate;
 
@@ -132,19 +126,3 @@ canvas.addEventListener("click", (ev) => {
   const { clientX, clientY } = ev;
   createBall(clientX, clientY);
 });
-
-//////////////////// IGNORE THE BELOW
-
-// const Cd = 0.47; // Coefficient of Drag
-// const rho = 1.22; // Density of environment (air) (kg/m^3)]
-
-// Apply physics F = -0.5 * C *A *rho * v^2
-// const A = (Math.PI * this.radius ** 2) / 1000; // frontal Projection
-// let Fx = -0.5 * Cd * A * rho * this.velocity.x ** 2;
-// let Fy = -0.5 * Cd * A * rho * this.velocity.y ** 2;
-// Fx = isNaN(Fx) ? 0 : Fx;
-// Fy = isNaN(Fy) ? 0 : Fy;
-// const acclX = Fx / this.mass;
-// const acclY = gr + Fy / this.mass;
-//
-// const forces = -0.0003 * Math.PI * this.radius ** 2;
