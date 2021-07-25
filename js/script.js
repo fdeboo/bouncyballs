@@ -128,7 +128,7 @@ canvas.addEventListener("touchstart", (ev) => {
   const { clientX, clientY } = ev.touches[0];
   console.log(clientX);
   console.log(ev);
-  const ball = new Ball(x, y);
+  const ball = new Ball(clientX, clientY);
   ball._draw();
   ballsArr.push(ball);
 });
