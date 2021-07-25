@@ -125,9 +125,8 @@ const eventHandler = (ev) => {
 
 canvas.addEventListener("touchstart", (ev) => {
   ev.preventDefault();
-  const x = ev.touches[0].clientX;
-  const y = ev.touches[0].clientY;
-  console.log(ev.touches);
+  const { clientX, clientY } = ev.touches[0];
+  console.log(clientX);
   console.log(ev);
   const ball = new Ball(x, y);
   ball._draw();
